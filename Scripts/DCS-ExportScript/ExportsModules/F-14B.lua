@@ -1348,7 +1348,7 @@ ExportScript.ConfigEveryFrameArguments =
 [613]  =  "%.1f",   --  LIGHTS_Position_Tail 
 [620]  =  "%.1f",   --  LIGHTS_Anticollision 
 [614]  =  "%.1f",   --  LIGHTS_Anticollision_Bottom 
-[615]  =  "%.1f",   --  LIGHTS_External_Dummy 
+-- [615]  =  "%.1f",   --  LIGHTS_External_Dummy 
 [621]  =  "%.1f",   --  LIGHTS_Disable_Ext 
 [625]  =  "%.1f",   --  LIGHTS_External_Dummy2 
 
@@ -2109,6 +2109,11 @@ function ExportScript.ProcessIkarusDCSConfigHighImportance(mainPanelDevice)
 	local y = {0, 80, 100, 120, 150, 200, 250, 300, 350, 400, 500, 600, 700, 800, 1000} -- 1000 KIAS is fake just to fill the range
 	ExportScript.Tools.SendData(2504, string.format("%d", ExportScript.Linearize(mainPanelDevice:get_argument_value(2129), x, y)))
 	
+
+    ExportScript.RadarMode(mainPanelDevice)
+	ExportScript.CAPButtons(mainPanelDevice)
+	ExportScript.RadarRange(mainPanelDevice)
+	ExportScript.TIDRange(mainPanelDevice)
 end
 
 function ExportScript.ProcessDACConfigHighImportance(mainPanelDevice)
@@ -2339,6 +2344,60 @@ function ExportScript.displayAltitude(mainPanelDevice) -- Altitude A4 ----------
 
 	--ExportScript.Tools.SendData(52262, "Altitude\n(MSL)\n" .. AltPlt .. "\nFT")	-- Return Altitude Formatted like F-14 Servopneumatic Altitude
 	ExportScript.Tools.SendData(52262, AltPlt .. "\nFT")	-- Return Altitude Formatted like F-14 Servopneumatic Altitude
+end
+
+function ExportScript.CAPButtons(mainPanelDevice)
+	-- ExportScript.Tools.SendData(55568, string.format("%s", mainPanelDevice:get_argument_value(5568)))
+	ExportScript.Tools.SendData(55554, string.format("%s", mainPanelDevice:get_argument_value(5554)))
+
+end
+
+function ExportScript.RadarMode(mainPanelDevice)
+	-- [6102] = "%.1f", -- DDD radar mode
+	local modenumber = round(mainPanelDevice:get_argument_value(6102), 1)
+	local labels = {
+		[0] = "MRL",
+		[1] = "A G",
+		[2] = "VSL",
+		[4] = "TWS\nMAN",
+		[5] = "TWS\nAUTO",
+		[6] = "RWS",
+		[7] = "PLM",
+		[8] = "PULSE",
+		[9] = "PD",
+		[10] = "PAL"
+	}
+
+	ExportScript.Tools.SendData(56102, labels[modenumber] or modenumber)
+end
+
+function ExportScript.RadarRange(mainPanelDevice)
+	-- [6100] = "%.1f", -- DDD range roller
+	local rangenumber = round(mainPanelDevice:get_argument_value(6100), 1)
+	local labels = {
+		[1] = "5",
+		[3] = "10",
+		[4] = "20",
+		[6] = "50",
+		[7] = "100",
+		[9] = "200"
+	}
+
+	ExportScript.Tools.SendData(56100, labels[rangenumber] or rangenumber)
+end
+
+function ExportScript.TIDRange(mainPanelDevice)
+	-- [2006] = "%.1f", -- TID Range
+	local rangenumber = round(mainPanelDevice:get_argument_value(2006), 1)
+	local labels = {
+		[10] = "400",
+		[5] = "200",
+		[0] = "100",
+		[-5] = "50",
+		[-10] = "25"
+	}
+
+	ExportScript.Tools.SendData(52006, labels[rangenumber] or rangenumber)
 end
 
 -----------------------
