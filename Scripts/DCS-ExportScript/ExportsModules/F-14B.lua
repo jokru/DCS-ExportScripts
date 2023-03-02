@@ -2347,9 +2347,140 @@ function ExportScript.displayAltitude(mainPanelDevice) -- Altitude A4 ----------
 end
 
 function ExportScript.CAPButtons(mainPanelDevice)
-	-- ExportScript.Tools.SendData(55568, string.format("%s", mainPanelDevice:get_argument_value(5568)))
-	ExportScript.Tools.SendData(55554, string.format("%s", mainPanelDevice:get_argument_value(5554)))
+    local catLabels = {
+        [0.0] = "BIT",
+        [0.2] = "SPL",
+        [0.4] = "NAV",
+        [0.6] = "TAC DATA",
+        [0.8] = "D/L",
+        [1.0] = "TGT DATA"
+    }
 
+    local labelsBIT = {
+        [1] = "DISP\n1",
+        [2] = "CMPTR\n2",
+        [3] = "AMCS\nCONF\n3",
+        [4] = "MAS\nMOAT\n4",
+        [5] = "FAULT\nDISP",
+        [6] = "RCVR\n5",
+        [7] = "XMTR\n6",
+        [8] = "ANT\nIR\n7",
+        [9] = "STT\n8",
+        [10] = "SPL\nTEST\n(NBR)",
+    }
+
+    local labelsSPL = {
+        [1] = "HOME\nON\nHELI",
+        [2] = "IFT\nMENU",
+        [3] = "IP\nTO\nTGT",
+        [4] = "GSS",
+        [5] = "AIR\nTO\nGROUND",
+        [6] = "",
+        [7] = "BIT\nMOVING\nTGT",
+        [8] = "OBC\nBIT",
+        [9] = "MAINT\nDISP",
+        [10] = "OBC\nDISPL", 
+    }
+
+    local labelsNAV = {
+        [1] = "OWN\nA/C",
+        [2] = "STORED\nHDG\nALIGN",
+        [3] = "TARPS\nNAV\nFIX",
+        [4] = "WIND\nSPD HDG",
+        [5] = "TARPS",
+        [6] = "TACAN\nFIX",
+        [7] = "RDR\nFIX",
+        [8] = "VIS\nFIX",
+        [9] = "FIX\nENABLE",
+        [10] = "MAG\nVAR\n(HDG)"
+    }
+
+    local labelsTACDATA = {
+        [1] = "WAY\nPT\n1",
+        [2] = "WAY\nPT\n2",
+        [3] = "WAY\nPT\n3",
+        [4] = "FIX\nPT",
+        [5] = "IP",
+        [6] = "HOME\nBASE",
+        [7] = "DEF\nPT",
+        [8] = "HOST\nAREA",
+        [9] = "SURF\nTGT",
+        [10] = "PT\nTO\nPT",
+    }
+
+    local labelsDL = {
+        [1] = "WILCO",
+        [2] = "CANTCO",
+        [3] = "NAV\nGRID",
+        [4] = "TID\nAVIA",
+        [5] = "F/F\nNAV\nUPDATE",
+        [6] = "POINT",
+        [7] = "ENGAGE",
+        [8] = "FLRP",
+        [9] = "CHAFF\nCOUNT",
+        [10] = "F/F\nAUTO\nRSTT",
+    }
+
+    local labelsTGTDATA = {
+        [1] = "GND\nMAP",
+        [2] = "DO\nNOT\nATTK",
+        [3] = "IFT\nAUX\nLAUNCH",
+        [4] = "DATA\nTRANS",
+        [5] = "TEST\nTGT",
+        [6] = "FRIEND",
+        [7] = "UNK",
+        [8] = "HOST",
+        [9] = "MULT\nTGT",
+        [10] = "SYM\nDELETE",
+    }
+
+    local buttonLabels = {
+        [0.0] = labelsBIT,
+        [0.2] = labelsSPL,
+        [0.4] = labelsNAV,
+        [0.6] = labelsTACDATA,
+        [0.8] = labelsDL,
+        [1.0] = labelsTGTDATA,
+    }
+
+    local cat = round(mainPanelDevice:get_argument_value(98), 1)
+    
+	ExportScript.Tools.SendData(50098, catLabels[cat] or "")
+    
+    -- [127]  =  "%.1f",   --      CAP_button1 
+    -- [126]  =  "%.1f",   --      CAP_button2 
+    -- [125]  =  "%.1f",   --      CAP_button3 
+    -- [124]  =  "%.1f",   --      CAP_button4 
+    -- [123]  =  "%.1f",   --      CAP_button5
+
+    -- [133]  =  "%.1f",   --      CAP_button6
+    -- [132]  =  "%.1f",   --      CAP_button7 
+    -- [131]  =  "%.1f",   --      CAP_button8 
+    -- [130]  =  "%.1f",   --      CAP_button9 
+    -- [129]  =  "%.1f",   --      CAP_button10 
+	ExportScript.Tools.SendData(50127, buttonLabels[cat][1] or "")
+	ExportScript.Tools.SendData(50126, buttonLabels[cat][2] or "")
+	ExportScript.Tools.SendData(50125, buttonLabels[cat][3] or "")
+	ExportScript.Tools.SendData(50124, buttonLabels[cat][4] or "")
+	ExportScript.Tools.SendData(50123, buttonLabels[cat][5] or "")
+	ExportScript.Tools.SendData(50133, buttonLabels[cat][6] or "")
+	ExportScript.Tools.SendData(50132, buttonLabels[cat][7] or "")
+	ExportScript.Tools.SendData(50131, buttonLabels[cat][8] or "")
+	ExportScript.Tools.SendData(50130, buttonLabels[cat][9] or "")
+	ExportScript.Tools.SendData(50129, buttonLabels[cat][10] or "")
+    
+    -- Also lights here for convenience
+    -- [5564]  =  "%.1f",   --      CAP_light_msg_btn6 
+    -- [5565]  =  "%.1f",   --      CAP_light_msg_btn7 
+    -- [5566]  =  "%.1f",   --      CAP_light_msg_btn8 
+    -- [5567]  =  "%.1f",   --      CAP_light_msg_btn9 
+    -- [5590]  =  "%.1f",   --      CAP_light_msg_btn10 
+
+    -- [5568]  =  "%.1f",   --      CAP_light_msg_btn1 
+    -- [5569]  =  "%.1f",   --      CAP_light_msg_btn2 
+    -- [5570]  =  "%.1f",   --      CAP_light_msg_btn3 
+    -- [5571]  =  "%.1f",   --      CAP_light_msg_btn4 
+    -- [5572]  =  "%.1f",   --      CAP_light_msg_btn5 
 end
 
 function ExportScript.RadarMode(mainPanelDevice)
