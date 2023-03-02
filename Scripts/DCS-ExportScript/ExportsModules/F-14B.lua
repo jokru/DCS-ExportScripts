@@ -835,7 +835,7 @@ ExportScript.ConfigEveryFrameArguments =
 
 [135]  =  "%.1f",   --      TACAN_CMD_Btn_RIO 
 
-[2022]  =  "%.1f",   --      WEAP_ATTK_Mode 
+[2022]  =  "%.2f",   --      WEAP_ATTK_Mode 
 
 
 [2199]  =  "%.1f",   --      rAnnunc_OXYLOW 
@@ -2077,7 +2077,7 @@ ExportScript.ConfigArguments =
 [72] = "%.1f",   -- Missile speed gate, (0.2, 0, 1)
 [72] = "%.1f",   -- Missile speed gate, (-0.2, 0, 1)
 [58] = "%.2f",   -- Elec fuse, (0.25, 0, 1)
-[2022] = "%.2f",   -- Attack mode, (0.25, 0, 1)
+-- [2022] = "%.2f",   -- Attack mode, (0.25, 0, 1) -- Don't export twice
 [58] = "%.2f",   -- Elec fuse, (-0.25, 0, 1)
 [2022] = "%.2f",   -- Attack mode, (-0.25, 0, 1)
 --   WINGSWEEP(16)
@@ -2114,6 +2114,9 @@ function ExportScript.ProcessIkarusDCSConfigHighImportance(mainPanelDevice)
 	ExportScript.CAPButtons(mainPanelDevice)
 	ExportScript.RadarRange(mainPanelDevice)
 	ExportScript.TIDRange(mainPanelDevice)
+    ExportScript.MissileSpeedGate(mainPanelDevice)
+    ExportScript.WeaponTypeWheel(mainPanelDevice)
+    ExportScript.AttackMode(mainPanelDevice)
 end
 
 function ExportScript.ProcessDACConfigHighImportance(mainPanelDevice)
@@ -2511,6 +2514,38 @@ function ExportScript.TIDRange(mainPanelDevice)
 
     local value = ExportScript.IndexTransform(round(mainPanelDevice:get_argument_value(2006),1), raws, labels)
 	ExportScript.Tools.SendData(52006, value)
+end
+
+function ExportScript.MissileSpeedGate(mainPanelDevice)
+    -- Same as above
+    -- [72]  =  "%.1f",   --      WEAP_MSL_SPD_Gate 
+    local raws =   {     0,   0.2,    0.4,        0.6,        0.8,      1}
+    local labels = {"WIDE", "NAR", "NOSE", "NOSE QTR", "TAIL QTR", "TAIL"}
+
+    local value = ExportScript.IndexTransform(round(mainPanelDevice:get_argument_value(72),1), raws, labels)
+    ExportScript.Tools.SendData(50072, value)
+end
+
+function ExportScript.WeaponTypeWheel(mainPanelDevice)
+    -- Same as above
+    -- [59] = "%.4f",   -- Weapon type wheel, (-0.023255813953488, 0, 1)
+
+    local raws =   {  0.19,  0.21,   0.23,         0.26,      0.28,       0.3,      0.33,      0.35,    0.37,      0.4,  0.42,      0.44,      0.47,      0.49,     0.51,     0.53,     0.56,    0.58,      0.6,     0.63,     0.65,     0.67,      0.7,   0.72,  0.74,    0.81,      1}
+    local labels = {"TURN", "OFF", "MK 81 H", "MK 81 L", "MK 82 H", "MK 82 L", "MK 83 H", "MK 83 L", "MK 84", "LAU-10", "OFF", "CBU 59A", "CBU 59B", "CBU 59C", "MK 20A", "MK 20B", "MK 20C", "MK 45", "GBU-10", "GBU-12", "GBU-16", "GBU-24", "BDU-33", "TALD", "OFF", "SPARE", "TURN"}
+
+    local value = ExportScript.IndexTransform(round(mainPanelDevice:get_argument_value(59),2), raws, labels)
+    ExportScript.Tools.SendData(50059, value)
+end
+
+function ExportScript.AttackMode(mainPanelDevice)
+    -- Same as above
+    -- [2022] = "%.2f",   -- Attack mode, (0.25, 0, 1)
+
+    local raws = {0, 0.25, 0.5, 0.75, 1}
+    local labels = {"TGT", "IP", "PLT", "MAN", "D/L BOMB"}
+
+    local value = ExportScript.IndexTransform(round(mainPanelDevice:get_argument_value(2022),2), raws, labels)
+    ExportScript.Tools.SendData(52022, value)
 end
 
 -----------------------
