@@ -2347,6 +2347,9 @@ function ExportScript.displayAltitude(mainPanelDevice) -- Altitude A4 ----------
 end
 
 function ExportScript.CAPButtons(mainPanelDevice)
+    -- DCS does not export the actual text of the CAP roller, just the position of the category roller
+    -- The below maps said position to category name and button texts
+
     local catLabels = {
         [0.0] = "BIT",
         [0.2] = "SPL",
@@ -2356,6 +2359,7 @@ function ExportScript.CAPButtons(mainPanelDevice)
         [1.0] = "TGT DATA"
     }
 
+    -- Text for buttons by category
     local labelsBIT = {
         [1] = "DISP\n1",
         [2] = "CMPTR\n2",
@@ -2368,7 +2372,6 @@ function ExportScript.CAPButtons(mainPanelDevice)
         [9] = "STT\n8",
         [10] = "SPL\nTEST\n(NBR)",
     }
-
     local labelsSPL = {
         [1] = "HOME\nON\nHELI",
         [2] = "IFT\nMENU",
@@ -2381,7 +2384,6 @@ function ExportScript.CAPButtons(mainPanelDevice)
         [9] = "MAINT\nDISP",
         [10] = "OBC\nDISPL", 
     }
-
     local labelsNAV = {
         [1] = "OWN\nA/C",
         [2] = "STORED\nHDG\nALIGN",
@@ -2394,7 +2396,6 @@ function ExportScript.CAPButtons(mainPanelDevice)
         [9] = "FIX\nENABLE",
         [10] = "MAG\nVAR\n(HDG)"
     }
-
     local labelsTACDATA = {
         [1] = "WAY\nPT\n1",
         [2] = "WAY\nPT\n2",
@@ -2407,7 +2408,6 @@ function ExportScript.CAPButtons(mainPanelDevice)
         [9] = "SURF\nTGT",
         [10] = "PT\nTO\nPT",
     }
-
     local labelsDL = {
         [1] = "WILCO",
         [2] = "CANTCO",
@@ -2420,7 +2420,6 @@ function ExportScript.CAPButtons(mainPanelDevice)
         [9] = "CHAFF\nCOUNT",
         [10] = "F/F\nAUTO\nRSTT",
     }
-
     local labelsTGTDATA = {
         [1] = "GND\nMAP",
         [2] = "DO\nNOT\nATTK",
@@ -2433,7 +2432,7 @@ function ExportScript.CAPButtons(mainPanelDevice)
         [9] = "MULT\nTGT",
         [10] = "SYM\nDELETE",
     }
-
+    -- Categorized table of button labels
     local buttonLabels = {
         [0.0] = labelsBIT,
         [0.2] = labelsSPL,
@@ -2443,97 +2442,89 @@ function ExportScript.CAPButtons(mainPanelDevice)
         [1.0] = labelsTGTDATA,
     }
 
+    -- [98]  =  "%.1f",   --      CAP_category 
     local cat = round(mainPanelDevice:get_argument_value(98), 1)
     
 	ExportScript.Tools.SendData(50098, catLabels[cat] or "")
     
     -- [127]  =  "%.1f",   --      CAP_button1 
-    -- [126]  =  "%.1f",   --      CAP_button2 
-    -- [125]  =  "%.1f",   --      CAP_button3 
-    -- [124]  =  "%.1f",   --      CAP_button4 
-    -- [123]  =  "%.1f",   --      CAP_button5
-
-    -- [133]  =  "%.1f",   --      CAP_button6
-    -- [132]  =  "%.1f",   --      CAP_button7 
-    -- [131]  =  "%.1f",   --      CAP_button8 
-    -- [130]  =  "%.1f",   --      CAP_button9 
-    -- [129]  =  "%.1f",   --      CAP_button10 
 	ExportScript.Tools.SendData(50127, buttonLabels[cat][1] or "")
+    -- [126]  =  "%.1f",   --      CAP_button2 
 	ExportScript.Tools.SendData(50126, buttonLabels[cat][2] or "")
+    -- [125]  =  "%.1f",   --      CAP_button3 
 	ExportScript.Tools.SendData(50125, buttonLabels[cat][3] or "")
+    -- [124]  =  "%.1f",   --      CAP_button4 
 	ExportScript.Tools.SendData(50124, buttonLabels[cat][4] or "")
+    -- [123]  =  "%.1f",   --      CAP_button5
 	ExportScript.Tools.SendData(50123, buttonLabels[cat][5] or "")
+    -- [133]  =  "%.1f",   --      CAP_button6
 	ExportScript.Tools.SendData(50133, buttonLabels[cat][6] or "")
+    -- [132]  =  "%.1f",   --      CAP_button7 
 	ExportScript.Tools.SendData(50132, buttonLabels[cat][7] or "")
+    -- [131]  =  "%.1f",   --      CAP_button8 
 	ExportScript.Tools.SendData(50131, buttonLabels[cat][8] or "")
+    -- [130]  =  "%.1f",   --      CAP_button9 
 	ExportScript.Tools.SendData(50130, buttonLabels[cat][9] or "")
+    -- [129]  =  "%.1f",   --      CAP_button10 
 	ExportScript.Tools.SendData(50129, buttonLabels[cat][10] or "")
     
     -- Also lights here for convenience
-    -- [5564]  =  "%.1f",   --      CAP_light_msg_btn6 
-    -- [5565]  =  "%.1f",   --      CAP_light_msg_btn7 
-    -- [5566]  =  "%.1f",   --      CAP_light_msg_btn8 
-    -- [5567]  =  "%.1f",   --      CAP_light_msg_btn9 
-    -- [5590]  =  "%.1f",   --      CAP_light_msg_btn10 
-
     -- [5568]  =  "%.1f",   --      CAP_light_msg_btn1 
     -- [5569]  =  "%.1f",   --      CAP_light_msg_btn2 
     -- [5570]  =  "%.1f",   --      CAP_light_msg_btn3 
     -- [5571]  =  "%.1f",   --      CAP_light_msg_btn4 
     -- [5572]  =  "%.1f",   --      CAP_light_msg_btn5 
+
+    -- [5564]  =  "%.1f",   --      CAP_light_msg_btn6 
+    -- [5565]  =  "%.1f",   --      CAP_light_msg_btn7 
+    -- [5566]  =  "%.1f",   --      CAP_light_msg_btn8 
+    -- [5567]  =  "%.1f",   --      CAP_light_msg_btn9 
+    -- [5590]  =  "%.1f",   --      CAP_light_msg_btn10 
 end
 
 function ExportScript.RadarMode(mainPanelDevice)
-	-- [6102] = "%.1f", -- DDD radar mode
-	local modenumber = round(mainPanelDevice:get_argument_value(6102), 1)
-	local labels = {
-		[0] = "MRL",
-		[1] = "A G",
-		[2] = "VSL",
-		[4] = "TWS\nMAN",
-		[5] = "TWS\nAUTO",
-		[6] = "RWS",
-		[7] = "PLM",
-		[8] = "PULSE",
-		[9] = "PD",
-		[10] = "PAL"
-	}
-
-	ExportScript.Tools.SendData(56102, labels[modenumber] or modenumber)
+	-- [6102] = "%.1f", -- DDD radar mode roller
+    -- DCS only gives us the position of the radar mode roller, not the actual mode
+    -- Below is the mapping to modes
+    local raws = {0.0, 0.1, 0.2, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0}
+	local labels = {"MRL", "A G", "VSL", "TWS\nMAN", "TWS\nAUTO", "RWS", "PLM", "PULSE", "PD", "PAL"}
+    
+    local value = ExportScript.IndexTransform(round(mainPanelDevice:get_argument_value(6102),1), raws, labels)
+	ExportScript.Tools.SendData(56102, value)
 end
 
 function ExportScript.RadarRange(mainPanelDevice)
+    -- Same as above
 	-- [6100] = "%.1f", -- DDD range roller
-	local rangenumber = round(mainPanelDevice:get_argument_value(6100), 1)
-	local labels = {
-		[1] = "5",
-		[3] = "10",
-		[4] = "20",
-		[6] = "50",
-		[7] = "100",
-		[9] = "200"
-	}
+    local raws =   {0.1, 0.3, 0.4, 0.6, 0.7, 0.9}
+	local labels = {  5,  10,  20,  50, 100, 200}
 
-	ExportScript.Tools.SendData(56100, labels[rangenumber] or rangenumber)
+    local value = ExportScript.IndexTransform(round(mainPanelDevice:get_argument_value(6100),1), raws, labels)
+	ExportScript.Tools.SendData(56100, value)
 end
 
 function ExportScript.TIDRange(mainPanelDevice)
+    -- Same as above
 	-- [2006] = "%.1f", -- TID Range
-	local rangenumber = round(mainPanelDevice:get_argument_value(2006), 1)
-	local labels = {
-		[10] = "400",
-		[5] = "200",
-		[0] = "100",
-		[-5] = "50",
-		[-10] = "25"
-	}
+    local raws =   {-1, -0.5,   0, 0.5,   1}
+	local labels = {25,   50, 100, 200, 400}
 
-	ExportScript.Tools.SendData(52006, labels[rangenumber] or rangenumber)
+    local value = ExportScript.IndexTransform(round(mainPanelDevice:get_argument_value(2006),1), raws, labels)
+	ExportScript.Tools.SendData(52006, value)
 end
 
 -----------------------
 -- General Functions --
 -----------------------
+function ExportScript.IndexTransform(in_val, raw_table, result_table)
+    -- Relies on the table being sorted
+    for i=1, #raw_table do
+        if in_val <= raw_table[i] then
+            return result_table[i]
+        end
+    end
+end
+
 
 function ExportScript.Linearize(current_value, raw_tab, final_tab)
   -- (c) scoobie
